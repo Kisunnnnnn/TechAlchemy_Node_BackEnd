@@ -1,6 +1,7 @@
 const Users = require('../collections/user')
 const bcrypt = require('bcrypt')
 const moment = require('moment')
+const fs = require('fs')
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args))
 const saveUsers = async (req, res) => {
     try {
@@ -156,10 +157,49 @@ const getWeather = async (req, res) => {
         })
     }
 }
+function sortNumbers_func(array) {
+    let completed = false
+    while (!completed) {
+        completed = true
+        for (let i = 0; i < array.length; i++) {
+            console.log("--" + i)
+            if (array[i - 1] > array[i]) {
+                completed = false
+                var temp = array[i - 1]
+                array[i - 1] = array[i]
+                array[i] = temp
+            }
+        }
+    }
+    return array;
+}
+const sortNumbers = (req, res) => {
+    try {
+        const data = fs.readFileSync('./numbers.txt', 'utf8')
+        const numbers = data.split(",")
+        const converted = numbers.map((num) => {
+            return parseInt(num, 10)
+        })
+        res.status(200).json({
+            error: false,
+            message: "",
+            data: sortNumbers_func(converted),
+            original: numbers
+        })
+    }
+    catch (err) {
+        res.status(400).json({
+            error: true,
+            message: "Something went wrong",
+            data: ""
+        })
+    }
+}
 
 module.exports = {
     saveUsers,
     login,
     getNews,
-    getWeather
+    getWeather,
+    sortNumbers
 }

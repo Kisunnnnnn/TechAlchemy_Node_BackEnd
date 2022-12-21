@@ -9,4 +9,7 @@ Starts the development server with nodemon
 ### `npm test`
 Runs the testcases
 
+### `Task 1`
+You can change or add the number series in the file called numbers.txt
+
 
