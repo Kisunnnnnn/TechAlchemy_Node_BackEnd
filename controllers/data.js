@@ -2,7 +2,9 @@ const Users = require('../collections/user')
 const bcrypt = require('bcrypt')
 const moment = require('moment')
 const fs = require('fs')
+const dotenv = require('dotenv')
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args))
+dotenv.config({ path: './config/config.env' })
 const saveUsers = async (req, res) => {
     try {
         let error = false, message = ""
@@ -97,7 +99,8 @@ const getNews = async (req, res) => {
         const options = {
             method: 'GET'
         };
-        const result = await fetch('https://newsapi.org/v2/everything?q=crypto&from=2022-12-20&sortBy=publishedAt&apiKey=b79fa2cf3d64411890b99497deb5f5aa', options)
+        const news_key = process.env.NEWS_KEY
+        const result = await fetch(`https://newsapi.org/v2/everything?q=crypto&from=2022-12-20&sortBy=publishedAt&apiKey=${news_key}`, options)
         const data = await result.json()
         newsData["count"] = data.articles.length
         for (let i = 0; i < data.articles.length; i++) {
@@ -130,7 +133,8 @@ const getWeather = async (req, res) => {
         const options = {
             method: 'GET'
         };
-        const result = await fetch('http://api.openweathermap.org/data/2.5/forecast?id=524901&appid=4ccdd1f4db864410263e0492f64cbb0d&units=metric', options)
+        const weather_key = process.env.WEATHER_KEY
+        const result = await fetch(`http://api.openweathermap.org/data/2.5/forecast?id=524901&appid=${weather_key}&units=metric`, options)
         const data = await result.json()
 
         WeatherData["count"] = data.cnt
